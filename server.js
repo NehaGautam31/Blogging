@@ -8,6 +8,7 @@ const express = require('express');
  app.use(express.static(initial_path));
 app.use(fileupload());
 
+
  app.get('/',(req,res) => {
     res.sendFile(path.join(initial_path+"/uploads","home.html"));
 
@@ -24,15 +25,15 @@ app.post('/upload',(req,res)=>{
    //image name
    let imagename = date.getDate() + date.getTime() + file.name;
    //image upload path
-   let path = 'public/uploads/img' + imagename;
+   let path = 'public/uploads/' + imagename;
 
-   //create upload
+
    file.mv(path, (err, result)=>{
       if(err){
          throw err;
       } else{
          //our image upload path
-         res.json('uploads/img/${imagename}')
+         res.json(`uploads/${imagename}`)
       }
    })
 })
