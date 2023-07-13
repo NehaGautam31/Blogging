@@ -1,7 +1,7 @@
 const blogTitleField = document.querySelector('.title');
 const articleFeild = document.querySelector('.article');
 
-//banner
+// banner
 const bannerImage = document.querySelector('#banner-upload');
 const banner = document.querySelector(".banner");
 let bannerPath;
@@ -13,7 +13,7 @@ bannerImage.addEventListener('change', () => {
     uploadImage(bannerImage, "banner");
 })
 
-uploadInput.addEventListener('change',() =>{
+uploadInput.addEventListener('change', () => {
     uploadImage(uploadInput, "image");
 })
 
@@ -24,56 +24,55 @@ const uploadImage = (uploadFile, uploadType) => {
         formdata.append('image', file);
 
         fetch('/upload', {
-            method: 'post' ,
+            method: 'post',
             body: formdata
         }).then(res => res.json())
-        .then(data =>{
+        .then(data => {
             if(uploadType == "image"){
                 addImage(data, file.name);
-            }else{
-                bannerPath= `${location.origin}/${data}`;
+            } else{
+                bannerPath = `${location.origin}/${data}`;
                 banner.style.backgroundImage = `url("${bannerPath}")`;
             }
-            
         })
-    }else{
+    } else{
         alert("upload Image only");
     }
 }
 
 const addImage = (imagepath, alt) => {
     let curPos = articleFeild.selectionStart;
-    let textToInsert =`\r![${alt}](${imagepath})\r`;
+    let textToInsert = `\r![${alt}](${imagepath})\r`;
     articleFeild.value = articleFeild.value.slice(0, curPos) + textToInsert + articleFeild.value.slice(curPos);
 }
 
-let months = ["Jan" , "Feb" , "Mar" , "Apr" , "May" , "Jun" , "Jul" , "Aug" , "Sep" , "Oct" , "Nov" , "Dec"];
+let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-publishBtn.addEventListener('click',() =>{
+publishBtn.addEventListener('click', () => {
     if(articleFeild.value.length && blogTitleField.value.length){
-        //generating id
-        let letters ='abcdefghijklmnopqrstuvwxyz';
+        // generating id
+        let letters = 'abcdefghijklmnopqrstuvwxyz';
         let blogTitle = blogTitleField.value.split(" ").join("-");
-        let id='';
-        for(let i=0;i<4;i++){
-            id +=letters[Math.floor(Math.random() * letters.length)];
+        let id = '';
+        for(let i = 0; i < 4; i++){
+            id += letters[Math.floor(Math.random() * letters.length)];
         }
 
-        //setting up docName
+        // setting up docName
         let docName = `${blogTitle}-${id}`;
-        let date = new Date();//for published at info
+        let date = new Date(); // for published at info
 
         //access firstore with db variable;
-         db.collection("blogs").doc(docName).set({
+        db.collection("blogs").doc(docName).set({
             title: blogTitleField.value,
             article: articleFeild.value,
             bannerImage: bannerPath,
             publishedAt: `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
         })
-        .then(() =>{
-            console.log('date entered');
+        .then(() => {
+            location.href = `/${docName}`;
         })
-        .catch((err) =>{
+        .catch((err) => {
             console.error(err);
         })
     }

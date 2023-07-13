@@ -10,12 +10,12 @@ app.use(fileupload());
 
 
  app.get('/',(req,res) => {
-    res.sendFile(path.join(initial_path+"/uploads","home.html"));
+    res.sendFile(path.join(initial_path /+"uploads","home.html"));
 
  })
 
  app.get('/editor' , (req, res) => {
-   res.sendFile(path.join(initial_path+"/uploads","editor.html"));
+   res.sendFile(path.join(initial_path /+"uploads","editor.html"));
 })
 
 //upluad link
@@ -27,7 +27,7 @@ app.post('/upload',(req,res)=>{
    //image upload path
    let path = 'public/uploads/' + imagename;
 
-
+//create upload
    file.mv(path, (err, result)=>{
       if(err){
          throw err;
@@ -37,6 +37,7 @@ app.post('/upload',(req,res)=>{
       }
    })
 })
+
  app.listen("3000",()  => {
     console.log('listening......');
  })
